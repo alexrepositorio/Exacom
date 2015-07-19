@@ -51,8 +51,5 @@ echo "<table>
 }
 echo "</tbody>";
 echo "</table>";
-
-
-
-
-include('pie.php') ?>
+include('pie.php'); 
+?>

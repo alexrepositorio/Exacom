@@ -8,9 +8,4 @@ function nivel($id){
 	require("DAT/config_disconnect.php");
     return ($nivel);
 }
-
-
-
-
-
  ?>

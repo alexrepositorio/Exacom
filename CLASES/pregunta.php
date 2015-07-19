@@ -23,11 +23,17 @@ if (!class_exists('pregunta')) {
 		public function set_id_cuestionario($id_cuestionario){
                  $this->id_cuestionario=$id_cuestionario;
         }    
+        public function set_id($id){
+                 $this->id=$id;
+        }    
         public function set_nombre($nombre){
                  $this->nombre=$nombre;
         }    
         public function set_preguntas($preguntas){
                     $this->preguntas=$preguntas;
+        } 
+        public function get_id(){
+           return($this->id);
         } 
         public function get_nombre(){
            return($this->nombre);

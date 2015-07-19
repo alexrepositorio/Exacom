@@ -50,7 +50,7 @@ th {
 	border-bottom: 1px solid #333;
 	box-shadow: inset 0 1px 0 #999;
 	color: #FFF !important;
-  font-weight: bold;
+ 	font-weight: bold;
 	padding: 10px 15px;
 	position: relative;
 	text-shadow: 0 1px 0 #000;	
@@ -289,4 +289,43 @@ a.readmore:hover{background-color:#2f2f2f; background-image:none; text-shadow:0 
 #mainfooter li{margin:0 6px 0 0;}
 #mainfooter li:last-child{margin-right:0;}
 .copyright{color:#b8b8b8; margin-bottom:0;}
+}
+@media print {
+ 
+#header {display:none;}
+#content {display:none;}
+#comments {display:none;}
+#sidebar {display:none;}
+#footer {display:none;}
+ 
+.site-description {display:none;}
+.site-title {display:none;}
+
+table {
+	background: #f5f5f5;
+	border-collapse: separate;
+	box-shadow: inset 0 1px 0 #fff;
+	font-size: 12px;
+	line-height: 24px;
+	margin: 30px auto;
+	text-align: left;
+	width: 800px;
+}	
+
+th {
+	background: url(http://jackrugile.com/images/misc/noise-diagonal.png), linear-gradient(#777, #444);
+	border-left: 1px solid #555;
+	border-right: 1px solid #777;
+	border-top: 1px solid #555;
+	border-bottom: 1px solid #333;
+	box-shadow: inset 0 1px 0 #999;
+	color: #FFF !important;
+ 	font-weight: bold;
+	padding: 10px 15px;
+	position: relative;
+	text-shadow: 0 1px 0 #000;	
+}
+ 
+
+
 }

@@ -1,5 +1,4 @@
 <?php 
-
 if (!class_exists('cuestionario')) {
 	class cuestionario
 {
@@ -41,11 +40,4 @@ if (!class_exists('cuestionario')) {
         } 
 	}
 }
-
-
-
-
-
-
-
  ?>	

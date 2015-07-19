@@ -1,36 +1,32 @@
 <?php 
-include("clases/pregunta.php");
-function consultar_preguntas($criterio,$valor){
-    foreach (glob("DAT/*.php") as $filename)
-                {
-                    include $filename;
-                }
+include("CLASES/pregunta.php");
+if (!function_exists('consultar_preguntas')) {
+    function consultar_preguntas($criterio,$valor){
+   require("DAT/DATpreguntas.php");
     $resultado=preguntas_consultar($criterio,$valor);
     return (transformar_a_lista($resultado));
+    }
 }
-function insertar_preguntas($pregunta,$cuestionario){
-    foreach (glob("DAT/*.php") as $filename)
-                {
-                    include $filename;
-                }
-    $resultado=preguntas_insertar($pregunta,$cuestionario);
+if (!function_exists('insertar_preguntas')) {
+    function insertar_preguntas($pregunta,$cuestionario){
+    require("DAT/DATpreguntas.php");
+    $preguntaa=new pregunta();
+    $preguntaa->__construct2($pregunta,$cuestionario);
+    $resultado=preguntas_insertar($preguntaa->get_preguntas(),$preguntaa->get_id_cuestionario());
+    }
 }
-function actualizar_preguntas($id,$pregunta,$cuestionario){
-    foreach (glob("DAT/*.php") as $filename)
-                {
-                    include $filename;
-                }
-    require("DAT/conect.php");
-    $resultado=preguntas_upd($id,$pregunta,$cuestionario);
+if (!function_exists('actualizar_preguntas')) {
+    function actualizar_preguntas($id,$pregunta,$cuestionario){
+    require("DAT/DATpreguntas.php");
+     $preguntaa=new pregunta();
+    $preguntaa->__construct3($id,$pregunta,$cuestionario);
+    $resultado=preguntas_upd($preguntaa->get_id(),$preguntaa->get_preguntas(),$preguntaa->get_id_cuestionario());
+    }
 }
-function borrar_preguntas($id){
-    foreach (glob("DAT/*.php") as $filename)
-                {
-                    include $filename;
-                }
+if (function_exists('borrar_preguntas')) {
+    function borrar_preguntas($id){
+    require("DAT/DATpreguntas.php");
     $resultado=preguntas_del($id);
+    }
 }
-
-
-
  ?>

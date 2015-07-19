@@ -15,7 +15,6 @@ echo "
     <h3>Total de preguntas del cuestionario: ". $total." </h3>
     <a href=ficha_nueva_pregunta.php?cuestionario=".$cuestionario['id_cuestionario']."><br>
           <img src=images/add.png width=50></a><h3>Añadir Pregunta</h3>";
-
 echo "<table>
   <thead>
     <tr>
@@ -24,7 +23,6 @@ echo "<table>
     </tr>
   </thead>
   <tbody>";
- 
   if (is_array($preguntas)) {
   foreach ($preguntas as $pregunta) {
     echo "<tr>";

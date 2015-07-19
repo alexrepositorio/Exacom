@@ -42,8 +42,6 @@ echo "<table>
           echo "<td><h4><font color=red>PENDIENTE  </h4></td>";
           $opciones="<td><a href=ficha_cuestionario.php?cuestionario=".$cuestionario['id_cuestionario'].">
           <img src=images/pencil.png width=20></a>
-          <a href=ficha_cuestionario_borrar.php?cuestionario=".$cuestionario['id_cuestionario']."> 
-          <img src=images/cross.png width=20></a>
           </td>";
         } 
         echo "$opciones";
@@ -55,4 +53,5 @@ echo "<table>
 }
 echo "</tbody>";
 echo "</table>";
-include('pie.php') ?>
+include('pie.php');
+?>
