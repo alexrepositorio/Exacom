@@ -4,7 +4,7 @@ include("BL/cuestionarios_funciones.php");
 include("BL/preguntas_funciones.php");
 include("BL/respuestas_funciones.php");
 
- $pregunta=preguntas_consultar('id',$_GET['pregunta']);
+ $pregunta=consultar_preguntas('id',$_GET['pregunta']);
  $pregunta=$pregunta[0];
 if (isset($_POST['pregunta'])) {
   preguntas_upd($_GET['pregunta'],$_POST['pregunta'],$_GET["cuestionario"]);
@@ -47,13 +47,13 @@ if (isset($_POST['pregunta'])) {
       echo "<input type='radio' name='Correcta' value='1'>";
     }
 
-     echo "</td></tr>";
+    echo "</td></tr>";
     echo "<tr><th><h4>Alternativa 2</th><td><input type='text' name=Alt2 value='".$respuestas[1]['respuesta']."' required  size='80'> &emsp;";
     echo "<input type='hidden' name='id2' value='".$respuestas[1]['id_respuesta']."'>";
     if ($respuestas[1]['correcta']==1) {
      echo "<input type='radio' name='Correcta' value='2' checked>";
     }else{
-      "<input type='radio' name='Correcta' value='2'>";
+      echo "<input type='radio' name='Correcta' value='2'>";
     }
     echo "</td></tr>";
     echo "<tr><th><h4>Alternativa 3</th><td><input type='text' name=Alt3 value='".$respuestas[2]['respuesta']."'required  size='80'>&emsp;";

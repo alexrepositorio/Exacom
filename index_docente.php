@@ -11,12 +11,7 @@ if(!isset($_GET["criterio"]))
     $texto="Criterio de busqueda: ".$_GET["criterio"]."";
 }
 
-echo "<aside id='introduction' class='bodywidth clear'>
-  <div id='introleft'>
-  <h2>Menú de opciones para <span class='blue'>Docente</span></h2>
-    <p><a href='#' class='findoutmore'>Find out more?</a></p>
-  </div>
-</aside>
+echo "
 <div id='maincontent' class='bodywidth clear' align='center'>
     <h2>Listado de Materias asignadas al docente</h2>";
  "<H4>$texto</h4></br>";
@@ -37,15 +32,17 @@ echo "<table>
   if (is_array($cuestionarios)) {
   foreach ($cuestionarios as $cuestionario) {
     echo "<tr>";
-    echo "<td><h4>".$cuestionario['materia']."</h4></td>";
+    echo "<td><h4>".$cuestionario['Materia']."</h4></td>";
       echo "<td><h4>".$cuestionario['cuestionario']." </h4></td>";
       if ($cuestionario['estado']==1) {
-        //echo "<td><img title='socio CON certificación orgánica' src=images/organico.png width=25></td>";
+         $opciones="<td>
+          <img src=images/visto.png width=20>
+          </td>";
       }else{
           echo "<td><h4><font color=red>PENDIENTE  </h4></td>";
-          $opciones="<td><a href=ficha_cuestionario.php?cuestionario=".$cuestionario['id'].">
+          $opciones="<td><a href=ficha_cuestionario.php?cuestionario=".$cuestionario['id_cuestionario'].">
           <img src=images/pencil.png width=20></a>
-          <a href=ficha_cuestionario_borrar.php?cuestionario=".$cuestionario['id']."> 
+          <a href=ficha_cuestionario_borrar.php?cuestionario=".$cuestionario['id_cuestionario']."> 
           <img src=images/cross.png width=20></a>
           </td>";
         } 
@@ -58,8 +55,4 @@ echo "<table>
 }
 echo "</tbody>";
 echo "</table>";
-
-
-
-
 include('pie.php') ?>

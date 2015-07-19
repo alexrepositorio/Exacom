@@ -14,13 +14,5 @@
        <hgroup id="websitetitle">
       <h1><span class="bold">Sistema de examenes Complexivos </span>Version 1</h1>
     </hgroup>
-    <nav>
-      <ul>
-        <li><a href="#">Home</a></li>
-        <li><a href="#">About</a></li>
-        <li><a href="#">News</a></li>
-        <li><a href="#">Contact Us</a></li>
-      </ul>
-    </nav>
   </header>
 </div>

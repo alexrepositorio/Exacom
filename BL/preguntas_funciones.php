@@ -1,28 +1,34 @@
 <?php 
-function preguntas_consultar($criterio,$valor){
-    require("DAT/conect.php");
-    $SQL="call SP_preguntas_cons('".$criterio."','".$valor."')";
-    $resultado=mysqli_query($link,$SQL) or die(mysqli_error($link));
-	require("DAT/config_disconnect.php");
+include("clases/pregunta.php");
+function consultar_preguntas($criterio,$valor){
+    foreach (glob("DAT/*.php") as $filename)
+                {
+                    include $filename;
+                }
+    $resultado=preguntas_consultar($criterio,$valor);
     return (transformar_a_lista($resultado));
 }
-function preguntas_insertar($pregunta,$cuestionario){
-    require("DAT/conect.php");
-    $SQL="call SP_preguntas_ins('".$pregunta."','".$cuestionario."')";
-    $resultado=mysqli_query($link,$SQL) or die(mysqli_error($link));
-	require("DAT/config_disconnect.php");
+function insertar_preguntas($pregunta,$cuestionario){
+    foreach (glob("DAT/*.php") as $filename)
+                {
+                    include $filename;
+                }
+    $resultado=preguntas_insertar($pregunta,$cuestionario);
 }
-function preguntas_upd($id,$pregunta,$cuestionario){
+function actualizar_preguntas($id,$pregunta,$cuestionario){
+    foreach (glob("DAT/*.php") as $filename)
+                {
+                    include $filename;
+                }
     require("DAT/conect.php");
-    $SQL="call SP_preguntas_upd('".$id."','".$pregunta."','".$cuestionario."')";
-    $resultado=mysqli_query($link,$SQL) or die(mysqli_error($link));
-	require("DAT/config_disconnect.php");
+    $resultado=preguntas_upd($id,$pregunta,$cuestionario);
 }
-function preguntas_del($id){
-    require("DAT/conect.php");
-    $SQL="call SP_preguntas_del('".$id."')";
-    $resultado=mysqli_query($link,$SQL) or die(mysqli_error($link));
-    require("DAT/config_disconnect.php");
+function borrar_preguntas($id){
+    foreach (glob("DAT/*.php") as $filename)
+                {
+                    include $filename;
+                }
+    $resultado=preguntas_del($id);
 }
 
 

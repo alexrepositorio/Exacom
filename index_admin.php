@@ -1,46 +1,58 @@
 <?php 
-include("cabecera.php");
- ?>
+include('cabecera.php');
+include('BL/cuestionarios_funciones.php');
 
-<aside id="introduction" class="bodywidth clear">
-  <div id="introleft">
-    <h2>Menú de opciones para <span class="blue">Administrador</span></h2>
-    <p> <?php echo "Saludos  ".$_SESSION['user']." tienes cuestionarios por revisar"; ?>  </p>
-    <p><a href="#" class="findoutmore">Visualizar pendientes</a></p>
-  </div>
-</aside>
-<div id="maincontent" class="bodywidth clear">
-  <div id="aboutleft">
-    <h3>Awesome Title</h3>
-    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse quis molestie sapien. Proin elit quam, commodo ut aliquet vel, elementum ut odio. Praesent semper tincidunt magna, sed sagittis elit congue sed. Mauris malesuada, elit ut luctus tristique, lectus libero rutrum mauris, ac tristique justo ligula sit amet metus.</p>
-    <p>Etiam a magna vitae diam elementum dignissim. Donec eget justo ut eros fermentum sodales. Donec eleifend sodales gravida. Nulla nulla metus, laoreet at consectetur sed, dapibus vitae felis. Donec venenatis laoreet purus vel hendrerit. Donec sit amet sem a metus bibendum gravida sit amet at ligula. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.</p>
-    <h4>Another Awesome Title</h4>
-    <p>Maecenas eu purus ipsum, non accumsan metus. Mauris augue dui, condimentum quis aliquam non, tincidunt id tortor. Donec dignissim sem sed nisl luctus scelerisque. Cras lacinia aliquam orci ac ultricies. Vestibulum ac lacus eu nisi commodo sollicitudin. Curabitur at consectetur leo. Donec augue velit, ornare in fermentum quis, tristique id augue.</p>
-    <p>Cras sem est, luctus ac pharetra id, feugiat id enim. Nullam at massa felis, vitae hendrerit tellus. Sed placerat arcu sed risus commodo iaculis. Aenean at felis enim. Mauris eget est in diam sagittis ultrices sit amet eu mi. Sed ultrices, orci et tincidunt fringilla, diam diam consequat elit, vel tempus mauris mi vitae sem. Ut lectus est, commodo a pulvinar at, faucibus et ligula.</p>
-  </div>
-  <section id="articlesright">
-    <article>
-      <figure> <img src="images/articleimage.jpg" alt=""> </figure>
-      <header><a href="#">
-        <h5>Random News Article</h5>
-        </a></header>
-      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse quis molestie sapien. Proin elit quam dolor amet...</p>
-      <a href="#" class="readmore">Read more</a> </article>
-    <article>
-      <figure> <img src="images/articleimage.jpg" alt=""> </figure>
-      <header><a href="#">
-        <h5>Random News Article</h5>
-        </a></header>
-      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse quis molestie sapien. Proin elit quam dolor amet...</p>
-      <a href="#" class="readmore">Read more</a> </article>
-    <article>
-      <figure> <img src="images/articleimage.jpg" alt=""> </figure>
-      <header><a href="#">
-        <h5>Random News Article</h5>
-        </a></header>
-      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse quis molestie sapien. Proin elit quam dolor amet...</p>
-      <a href="#" class="readmore">Read more</a> </article>
-  </section>
-</div>
-<?php 
-include("pie.php") ?>
+if(!isset($_GET["criterio"]))
+{
+  $cuestionarios=cuestionario_consultar("user",$_SESSION["cuenta"]);
+  $texto="";
+}else{
+    $cuestionarios=cuestionario_consultar($_GET["criterio"],$_SESSION["cuenta"]);
+    $texto="Criterio de busqueda: ".$_GET["criterio"]."";
+}
+echo"<div id='maincontent' class='bodywidth clear' align='center'>
+    <h2>Listado de Materias</h2>";
+ "<H4>$texto</h4></br>";
+ echo "<td><h4>Pendientes<br>";
+  echo "<a href=?criterio=pendientes><img width=35 src=images/pendientes.png></a>";
+  echo "</td>";
+echo "<H4 > Total Cuestionarios: (".count($cuestionarios).")</h4> </br>";
+echo "<table>
+  <thead>
+    <tr>
+    <th><h3>Materias</h3></th>
+    <th><h3>Cuestionario</h3></th>
+    <th><h3>Estado</h3></th>
+    <th><h3>Opciones</h3></th>
+    </tr>
+  </thead>
+  <tbody>";
+  if (is_array($cuestionarios)) {
+  foreach ($cuestionarios as $cuestionario) {
+    echo "<tr>";
+    echo "<td><h4>".$cuestionario['Materia']."</h4></td>";
+      echo "<td><h4>".$cuestionario['cuestionario']." </h4></td>";
+      if ($cuestionario['estado']==1) {
+        $opciones="<td>
+          <img src=images/visto.png width=20>
+          </td>";
+      }else{
+          echo "<td><h4><font color=red>PENDIENTE  </h4></td>";
+          $opciones="<td><a href=ficha_autorizacion_cuestionario.php?cuestionario=".$cuestionario['id_cuestionario'].">
+          <img src=images/ver.png width=20></a>
+          </td>";
+        } 
+        echo "$opciones";
+    } 
+}else{
+  echo "<tr>";
+  echo "<td>sin datos</td>";
+  echo "</tr>";
+}
+echo "</tbody>";
+echo "</table>";
+
+
+
+
+include('pie.php') ?>

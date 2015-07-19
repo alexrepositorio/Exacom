@@ -5,8 +5,8 @@ include("BL/preguntas_funciones.php");
 include("BL/respuestas_funciones.php");
 
 if (isset($_POST['pregunta'])) {
-  preguntas_insertar($_POST['pregunta'],$_GET["cuestionario"]);
-  $pregunta=preguntas_consultar('enunciado',$_POST['pregunta']);
+  insertar_preguntas($_POST['pregunta'],$_GET["cuestionario"]);
+  $pregunta=consultar_preguntas('enunciado',$_POST['pregunta']);
   $pregunta=$pregunta[0]['id_pregunta'];
   if (isset($_POST['Correcta'])) {
     switch ($_POST['Correcta']) {

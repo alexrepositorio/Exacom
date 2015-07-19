@@ -6,15 +6,23 @@ include("BL/respuestas_funciones.php");
 
  $cuestionario=cuestionario_consultar("id",$_GET["cuestionario"]);
  $cuestionario=$cuestionario[0];
- $preguntas=consultar_preguntas('cuestionario',$_GET["cuestionario"]);
+ $preguntas=preguntas_consultar('cuestionario',$_GET["cuestionario"]);
  $total=count($preguntas);
 
-echo "
+if(isset ($_GET["cuestionario"]) AND isset($_GET["aprobar"]))
+{
+  cuestionario_autorizar($_GET["cuestionario"]);
+  echo "<div align=center><h1>Aprobando, ESPERA...
+  <meta http-equiv='Refresh' content='2;url=index_admin.php></font></h1></div>";
+}
+
+
+echo"
 <div id='maincontent' class='bodywidth clear' align='center'>
     <h2>Ficha del cuestionario ".$cuestionario['cuestionario']." </h2><br>
     <h3>Total de preguntas del cuestionario: ". $total." </h3>
-    <a href=ficha_nueva_pregunta.php?cuestionario=".$cuestionario['id_cuestionario']."><br>
-          <img src=images/add.png width=50></a><h3>Añadir Pregunta</h3>";
+    <a href=?cuestionario=".$_GET["cuestionario"]."&aprobar=1 onclick='cuestionario_autorizar();'><br>
+          <img src=images/visto.png width=50></a><h3>Aprobar Cuestionario</h3>";
 
 echo "<table>
   <thead>
@@ -57,4 +65,8 @@ echo "<table>
 	}
 echo "</tbody>";
 echo "</table>";
+
+
+
+
  ?>

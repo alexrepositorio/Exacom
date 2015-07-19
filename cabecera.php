@@ -14,14 +14,6 @@
     <hgroup id="websitetitle">
       <h1><span class="bold">Sistema de Examenes Complexivos</span>Version 1</h1>
     </hgroup>
-    <nav>
-      <ul>
-        <li><a href="#">Home</a></li>
-        <li><a href="#">About</a></li>
-        <li><a href="#">News</a></li>
-        <li><a href="#">Contact Us</a></li>
-      </ul>
-    </nav>
   </header>
 </div>
 <?php 
@@ -42,4 +34,21 @@ if (isset($_POST['logout'])) {
 }
 echo "</form>";
 echo"</div><hr>";
+if ($_SESSION["acceso"]==1) {
+  echo "<aside id='introduction' class='bodywidth clear'>
+  <div id='introleft'>
+  <h2>Menú de opciones para <span class='blue'>Administrador</span></h2>
+    <p><a href='mallas.php' class='findoutmore'>Areas del conocimiento</a>
+     <p><a href='index_admin.php' class='findoutmore'>Lista de cuestionarios</a></p>
+  </div>
+</aside>";
+}
+if ($_SESSION["acceso"]==3) {
+  echo "<aside id='introduction' class='bodywidth clear'>
+  <div id='introleft'>
+  <h2>Menú de opciones para <span class='blue'>Docente</span></h2>
+    <p><a href='index_docente.php' class='findoutmore'>Cuestionarios</a>
+  </div>
+</aside>";
+}
  ?>
