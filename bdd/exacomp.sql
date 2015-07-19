@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 15-07-2015 a las 20:02:32
+-- Tiempo de generación: 20-07-2015 a las 01:40:32
 -- Versión del servidor: 5.6.21
 -- Versión de PHP: 5.6.3
 
@@ -32,33 +32,35 @@ BEGIN
 case criterio
 	when 'materia'
     then 
-		Select cuestionario.id_cuestionario as id,cuestionario.cuestionario as cuestionario,
-        cuestionario.estado as estado,
-        materias.Materia as materia,count(preguntas.pregunta) as preguntas
+		Select cuestionario.*, 
+        materias.* 
         from cuestionario 
-        left join materias  on materias.id_materias=cuestionario.id_cuestionario
-		left join preguntas on cuestionario.id_cuestionario=preguntas.id_pregunta
+        left join materias  on materias.id_materias=cuestionario.id_materia
         where Materia like CONCAT('%', valor, '%');
 	when 'user'
     then
-		Select cuestionario.id_cuestionario as id,cuestionario.cuestionario as cuestionario,
-        cuestionario.estado as estado,
-        materias.Materia as materia,count(preguntas.pregunta) as preguntas
+		Select cuestionario.*,materias.*
         from cuestionario 
-        left join materias  on materias.id_materias=cuestionario.id_cuestionario
-		left join preguntas on cuestionario.id_cuestionario=preguntas.id_pregunta
+        left join materias  on materias.id_materias=cuestionario.id_materia
 		left join titulacion on materias.id_titulacion=titulacion.id_Titulacion
 		left join usuarios_titulacion on usuarios_titulacion.id_titulacion=titulacion.id_Titulacion
 		left join usuarios on usuarios.id_usuario=usuarios_titulacion.id_usuarios
         where  usuarios.id_usuario = valor;
+	when 'estudiante'
+    then
+		Select cuestionario.*,materias.*
+        from cuestionario 
+        left join materias  on materias.id_materias=cuestionario.id_materia
+		left join titulacion on materias.id_titulacion=titulacion.id_Titulacion
+		left join usuarios_titulacion on usuarios_titulacion.id_titulacion=titulacion.id_Titulacion
+		left join usuarios on usuarios.id_usuario=usuarios_titulacion.id_usuarios
+        where  usuarios.id_usuario = valor
+        and cuestionario.estado=1;
 	when 'pendientes'
     then
-		Select cuestionario.id_cuestionario as id,cuestionario.cuestionario as cuestionario,
-        cuestionario.estado as estado,
-        materias.Materia as materia,count(preguntas.pregunta) as preguntas
+		Select cuestionario.*,materias.*
         from cuestionario 
-        left join materias  on materias.id_materias=cuestionario.id_cuestionario
-		left join preguntas on cuestionario.id_cuestionario=preguntas.id_pregunta
+        left join materias  on materias.id_materias=cuestionario.id_materia
 		left join titulacion on materias.id_titulacion=titulacion.id_Titulacion
 		left join usuarios_titulacion on usuarios_titulacion.id_titulacion=titulacion.id_Titulacion
 		left join usuarios on usuarios.id_usuario=usuarios_titulacion.id_usuarios
@@ -66,16 +68,70 @@ case criterio
         and cuestionario.estado=0;
 	when 'id'
     then 
-		Select cuestionario.id_cuestionario as id,cuestionario.cuestionario as cuestionario,
-        cuestionario.estado as estado,
-        materias.Materia as materia,count(preguntas.pregunta) as preguntas
+		Select cuestionario.*,materias.* 
         from cuestionario 
         left join materias  on materias.id_materias=cuestionario.id_cuestionario
-		left join preguntas on cuestionario.id_cuestionario=preguntas.id_pregunta
         where cuestionario.id_cuestionario=valor;
 end case;
 
 
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `SP_cuestionarios_del`(
+in id int(11)
+)
+BEGIN
+	delete from cuestionario where id_cuestionario=id;
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `SP_cuestionarios_ins`(
+in in_cuestionario varchar(45),
+in in_materia int(11)
+)
+BEGIN
+	insert into cuestionario(cuestionario,id_materia) values
+    (in_cuestionario,in_materia);
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `SP_cuestionario_aprobar`(
+in in_id int(11)
+)
+BEGIN
+	update cuestionario set estado=1 where  id_cuestionario=in_id;
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `SP_materias_cons`(
+in criterio varchar(20),
+in valor varchar(20)
+)
+BEGIN
+case criterio
+when 'titulacion'
+then
+	select * from materias where id_titulacion=valor;
+when 'id'
+then
+	select * from materias where id_materias=valor;
+when ''
+then
+	select * from materias;
+end case;
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `SP_materias_ins`(
+in in_materia varchar(20),
+in titulacion int(11)
+)
+BEGIN
+insert into materias(Materia,id_titulacion) values (in_materia,titulacion);
+
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `SP_materia_del`(
+in in_id int(11)
+)
+BEGIN
+	delete from materias where id_materias=in_id;
 END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `SP_nivel_cons`(
@@ -180,6 +236,28 @@ update respuestas set
 
 END$$
 
+CREATE DEFINER=`root`@`localhost` PROCEDURE `SP_titulaciones_cons`(
+in criterio varchar(20),
+in valor varchar(20)
+)
+BEGIN
+case criterio
+	when 'id'
+	then
+		select * from titulacion where id_Titulacion=valor;
+	when ''
+    then
+		select * from titulacion;
+end case;        
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `SP_titulaciones_ins`(
+in in_malla varchar(45)
+)
+BEGIN
+	insert into titulacion(Titulacion) values (in_malla);
+END$$
+
 CREATE DEFINER=`root`@`localhost` PROCEDURE `SP_usuarios_find`(
 in in_user varchar(20),
 in in_pass varchar(20)
@@ -202,14 +280,15 @@ CREATE TABLE IF NOT EXISTS `cuestionario` (
   `cuestionario` varchar(45) DEFAULT NULL,
   `id_materia` int(11) NOT NULL,
   `estado` tinyint(1) DEFAULT '0'
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
 
 --
 -- Volcado de datos para la tabla `cuestionario`
 --
 
 INSERT INTO `cuestionario` (`id_cuestionario`, `cuestionario`, `id_materia`, `estado`) VALUES
-(1, 'Programacion_cuestionario', 1, 0);
+(1, 'Programacion_cuestionario', 1, 1),
+(4, 'Bdd_cuestionario 1', 5, 0);
 
 -- --------------------------------------------------------
 
@@ -221,14 +300,18 @@ CREATE TABLE IF NOT EXISTS `materias` (
 `id_materias` int(11) NOT NULL,
   `Materia` varchar(45) DEFAULT NULL,
   `id_titulacion` int(11) NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8;
 
 --
 -- Volcado de datos para la tabla `materias`
 --
 
 INSERT INTO `materias` (`id_materias`, `Materia`, `id_titulacion`) VALUES
-(1, 'Programacion', 1);
+(1, 'Programacion', 1),
+(5, 'Base de datos', 1),
+(7, 'Ingenieria de softwa', 1),
+(8, 'Gestion de TI', 1),
+(11, 'Cuestionario Contabi', 2);
 
 -- --------------------------------------------------------
 
@@ -240,7 +323,7 @@ CREATE TABLE IF NOT EXISTS `preguntas` (
 `id_pregunta` int(11) NOT NULL,
   `pregunta` varchar(120) DEFAULT NULL,
   `id_cuestionario` int(11) NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8;
 
 --
 -- Volcado de datos para la tabla `preguntas`
@@ -248,7 +331,10 @@ CREATE TABLE IF NOT EXISTS `preguntas` (
 
 INSERT INTO `preguntas` (`id_pregunta`, `pregunta`, `id_cuestionario`) VALUES
 (4, 'Los objetos son...', 1),
-(6, 'Un array es.....', 1);
+(6, 'Un array es.....', 1),
+(7, 'Una clase abstracta es....', 1),
+(9, 'Que es una base de datos', 4),
+(10, 'Que es una clave primaria', 4);
 
 -- --------------------------------------------------------
 
@@ -258,10 +344,10 @@ INSERT INTO `preguntas` (`id_pregunta`, `pregunta`, `id_cuestionario`) VALUES
 
 CREATE TABLE IF NOT EXISTS `respuestas` (
 `id_respuesta` int(11) NOT NULL,
-  `respuesta` varchar(60) DEFAULT NULL,
+  `respuesta` varchar(120) DEFAULT NULL,
   `correcta` tinyint(1) DEFAULT '0',
   `id_pregunta` int(11) DEFAULT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8;
 
 --
 -- Volcado de datos para la tabla `respuestas`
@@ -276,7 +362,19 @@ INSERT INTO `respuestas` (`id_respuesta`, `respuesta`, `correcta`, `id_pregunta`
 (7, '8', 0, NULL),
 (8, 'un conjunto de valores', 1, 6),
 (9, 'un tipo de dato', 0, 6),
-(10, 'una funcion', 0, 6);
+(10, 'una funcion', 0, 6),
+(11, 'Una clase sin atributos', 0, 7),
+(12, 'Una clase que declara la existencia de métodos pero no la implementación de dichos métodos', 1, 7),
+(13, 'Una clase sin métodos', 0, 7),
+(14, 'Una coleccion de datos', 1, NULL),
+(15, 'Un archivo', 0, NULL),
+(16, 'Una clase', 0, NULL),
+(17, 'Una coleccion de datos', 1, 9),
+(18, 'Un archivo', 0, 9),
+(19, 'una funcion', 0, 9),
+(20, 'Un atributo', 0, 10),
+(21, 'Un identificador unico de columna', 1, 10),
+(22, 'Una clave que sirve para relacionarse con otras tablas', 0, 10);
 
 -- --------------------------------------------------------
 
@@ -345,14 +443,16 @@ CREATE TABLE IF NOT EXISTS `simulacion` (
 CREATE TABLE IF NOT EXISTS `titulacion` (
 `id_Titulacion` int(11) NOT NULL,
   `Titulacion` varchar(45) DEFAULT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 
 --
 -- Volcado de datos para la tabla `titulacion`
 --
 
 INSERT INTO `titulacion` (`id_Titulacion`, `Titulacion`) VALUES
-(1, 'Sistemas Informáticos');
+(1, 'Sistemas Informáticos'),
+(2, 'Contabilidad'),
+(3, 'Administracion de empresas');
 
 -- --------------------------------------------------------
 
@@ -392,7 +492,11 @@ CREATE TABLE IF NOT EXISTS `usuarios_titulacion` (
 --
 
 INSERT INTO `usuarios_titulacion` (`id_usuarios`, `id_titulacion`) VALUES
-(3, 1);
+(1, 2),
+(1, 3),
+(1, 1),
+(3, 1),
+(2, 1);
 
 --
 -- Índices para tablas volcadas
@@ -472,22 +576,22 @@ ALTER TABLE `usuarios_titulacion`
 -- AUTO_INCREMENT de la tabla `cuestionario`
 --
 ALTER TABLE `cuestionario`
-MODIFY `id_cuestionario` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2;
+MODIFY `id_cuestionario` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=5;
 --
 -- AUTO_INCREMENT de la tabla `materias`
 --
 ALTER TABLE `materias`
-MODIFY `id_materias` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2;
+MODIFY `id_materias` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=12;
 --
 -- AUTO_INCREMENT de la tabla `preguntas`
 --
 ALTER TABLE `preguntas`
-MODIFY `id_pregunta` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=7;
+MODIFY `id_pregunta` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=11;
 --
 -- AUTO_INCREMENT de la tabla `respuestas`
 --
 ALTER TABLE `respuestas`
-MODIFY `id_respuesta` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=11;
+MODIFY `id_respuesta` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=23;
 --
 -- AUTO_INCREMENT de la tabla `respuesta_usuarios`
 --
@@ -507,7 +611,7 @@ MODIFY `id_simulacion` int(11) NOT NULL AUTO_INCREMENT;
 -- AUTO_INCREMENT de la tabla `titulacion`
 --
 ALTER TABLE `titulacion`
-MODIFY `id_Titulacion` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2;
+MODIFY `id_Titulacion` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=4;
 --
 -- AUTO_INCREMENT de la tabla `usuarios`
 --
